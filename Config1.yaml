@@ -1,0 +1,119 @@
+parameters:
+
+  load_data: false
+  feature_extraction: true
+
+
+
+load_data:
+
+  data_inertial:
+    src: load_data.ActionData
+    data_path: UTD6-MHAD\Inertial\
+    dim: 6
+    nature: IMU
+
+  data_kinect:
+    src: load_data.ActionData
+    data_path: UTD6-MHAD\Skeleton\
+    dim: 60
+    nature: skeleton
+
+
+###############################################################################
+
+
+feature_extraction:
+
+
+  data_inertial:
+    src: feature_extraction.feature1
+    window_size: 200     #Number of samples
+    type: statistics     # temporal, statistics, fft, synchro
+    step: 2     #window step (in samples)
+
+
+
+  data_kinect:
+
+
+###############################################################################
+
+
+training:
+  src: classification.lstmf
+  learning rate: 0.001
+  number of units: 128
+  dropout: 0.2
+  epochs: 200
+
+
+data_info:
+  h: 24
+  w: 1
+
+Architecture:
+
+  conv1:
+    in_channels: 6
+    out_channels: 32
+    kernel_size: [4, 4]
+    padding: [0, 0]
+    stride: [1, 1]
+    dilation: [1, 1]
+
+  pool1:
+    kernel_size: [2, 2]
+    padding: [0, 0]
+    stride: [2, 2]
+    dilation: [1, 1]
+
+  conv2:
+    in_channels: 32
+    out_channels: 64
+    kernel_size: [3, 3]
+    padding: [0, 0]
+    stride: [1, 1]
+    dilation: [1, 1]
+
+  pool2:
+    kernel_size: [2, 2]
+    padding: [0, 0]
+    stride: [2, 2]
+    dilation: [1, 1]
+
+  conv3:
+    in_channels: 64
+    out_channels: 128
+    kernel_size: [3, 3]
+    padding: [0, 0]
+    stride: [1, 1]
+    dilation: [1, 1]
+
+  pool3:
+    kernel_size: [2, 2]
+    padding: [0, 0]
+    stride: [2, 2]
+    dilation: [1, 1]
+
+  linear1:
+    in_features: -128
+    out_features: 200
+    bias: true
+
+  linear2:
+    in_features: 200
+    out_features: 80
+    bias: true
+
+  linear3:
+    in_features: 80
+    out_features: 28
+    bias: true
+
+
+
+
+
+#  layer4:
+
